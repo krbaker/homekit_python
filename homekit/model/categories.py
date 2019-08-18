@@ -91,6 +91,11 @@ class _Categories(object):
         if item in self._categories_rev:
             return self._categories_rev[item]
 
+        # if we look up an integer, this may be a unknown category. So we
+        # a message but not an exception. See issue #131, #136 and #158.
+        if isinstance(item, int):
+            return 'Unknown Category #{c}'.format(c=item)
+
         raise KeyError('Item {item} not found'.format(item=item))
 
 
