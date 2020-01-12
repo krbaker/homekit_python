@@ -65,6 +65,7 @@ class _ServicesTypes(object):
             'CF': 'public.hap.service.irrigation-system',
             'D0': 'public.hap.service.valve',
             'D7': 'public.hap.service.faucet',
+            'D8': 'public.hap.service.television',
             '110': 'public.hap.service.camera-rtp-stream-management',
             '112': 'public.hap.service.microphone',
             '113': 'public.hap.service.speaker',

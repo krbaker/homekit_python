@@ -26,7 +26,14 @@ __all__ = [
     'SaturationCharacteristicMixin', 'SerialNumberCharacteristic', 'TargetHeatingCoolingStateCharacteristic',
     'TargetHeatingCoolingStateCharacteristicMixin', 'TargetTemperatureCharacteristic',
     'TargetTemperatureCharacteristicMixin', 'TemperatureDisplayUnitCharacteristic', 'TemperatureDisplayUnitsMixin',
-    'VolumeCharacteristic', 'VolumeCharacteristicMixin'
+    'VolumeCharacteristic', 'VolumeCharacteristicMixin', 'ActiveIdentifierCharacteristic',
+    'ActiveIdentifierCharacteristicMixin', 'ActiveCharacteristic', 'ActiveCharacteristicMixin',
+    'ClosedCaptionsCharacteristic', 'ClosedCaptionsCharacteristicMixin', 'ConfiguredNameCharacteristic',
+    'ConfiguredNameCharacteristicMixin', 'SleepDiscoveryModeCharacteristic', 'SleepDiscoveryModeCharacteristicMixin',
+    'CurrentMediaStateCharacteristic', 'CurrentMediaStateCharacteristicMixin', 'TargetMediaStateCharacteristic',
+    'TargetMediaStateCharacteristicMixin', 'PictureModeCharacteristic', 'PictureModeCharacteristicMixin',
+    'PowerModeSelectionCharacteristic', 'PowerModeSelectionCharacteristicMixin', 'RemoteKeyCharacteristic',
+    'RemoteKeyCharacteristicMixin', 'DisplayOrderCharacteristic', 'DisplayOrderCharacteristicMixin'
 ]
 
 from homekit.model.characteristics.characteristic_permissions import CharacteristicPermissions
@@ -35,12 +42,22 @@ from homekit.model.characteristics.characteristic_units import CharacteristicUni
 from homekit.model.characteristics.characteristic_formats import CharacteristicFormats
 
 from homekit.model.characteristics.abstract_characteristic import AbstractCharacteristic
+from homekit.model.characteristics.active_identifier import ActiveIdentifierCharacteristic, \
+    ActiveIdentifierCharacteristicMixin
+from homekit.model.characteristics.active import ActiveCharacteristic, ActiveCharacteristicMixin
 from homekit.model.characteristics.battery_level import BatteryLevelCharacteristic, BatteryLevelCharacteristicMixin
 from homekit.model.characteristics.brightness import BrightnessCharacteristicMixin, BrightnessCharacteristic
+from homekit.model.characteristics.closed_captions import ClosedCaptionsCharacteristic, \
+    ClosedCaptionsCharacteristicMixin
+from homekit.model.characteristics.configured_name import ConfiguredNameCharacteristic, \
+    ConfiguredNameCharacteristicMixin
 from homekit.model.characteristics.current_heating_cooling_state import CurrentHeatingCoolingStateCharacteristicMixin, \
     CurrentHeatingCoolingStateCharacteristic
 from homekit.model.characteristics.current_temperature import CurrentTemperatureCharacteristicMixin, \
     CurrentTemperatureCharacteristic
+from homekit.model.characteristics.current_media_state import CurrentMediaStateCharacteristic, \
+    CurrentMediaStateCharacteristicMixin
+from homekit.model.characteristics.display_order import DisplayOrderCharacteristic, DisplayOrderCharacteristicMixin
 from homekit.model.characteristics.firmware_revision import FirmwareRevisionCharacteristic
 from homekit.model.characteristics.hardware_revision import HardwareRevisionCharacteristic
 from homekit.model.characteristics.hue import HueCharacteristicMixin, HueCharacteristic
@@ -50,10 +67,18 @@ from homekit.model.characteristics.model import ModelCharacteristic
 from homekit.model.characteristics.name import NameCharacteristic
 from homekit.model.characteristics.on import OnCharacteristicMixin, OnCharacteristic
 from homekit.model.characteristics.outlet_in_use import OutletInUseCharacteristic, OutletInUseCharacteristicMixin
+from homekit.model.characteristics.picture_mode import PictureModeCharacteristic, PictureModeCharacteristicMixin
+from homekit.model.characteristics.power_mode_selection import PowerModeSelectionCharacteristic, \
+    PowerModeSelectionCharacteristicMixin
+from homekit.model.characteristics.remote_key import RemoteKeyCharacteristic, RemoteKeyCharacteristicMixin
 from homekit.model.characteristics.saturation import SaturationCharacteristicMixin, SaturationCharacteristic
 from homekit.model.characteristics.serialnumber import SerialNumberCharacteristic
+from homekit.model.characteristics.sleep_discovery_mode import SleepDiscoveryModeCharacteristic, \
+    SleepDiscoveryModeCharacteristicMixin
 from homekit.model.characteristics.target_heating_cooling_state import TargetHeatingCoolingStateCharacteristic, \
     TargetHeatingCoolingStateCharacteristicMixin
+from homekit.model.characteristics.target_media_state import TargetMediaStateCharacteristic, \
+    TargetMediaStateCharacteristicMixin
 from homekit.model.characteristics.target_temperature import TargetTemperatureCharacteristicMixin, \
     TargetTemperatureCharacteristic
 from homekit.model.characteristics.temperature_display_unit import TemperatureDisplayUnitsMixin, \
