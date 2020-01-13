@@ -23,8 +23,8 @@ class DisplayOrderCharacteristic(AbstractCharacteristic):
     Defined on page XXX  (look https://github.com/KhaosT/HAP-NodeJS/blob/master/src/lib/gen/HomeKit-TV.ts instead)
     """
 
-    def __init__(self, iid, name):
-        AbstractCharacteristic.__init__(self, iid, CharacteristicsTypes.DISPLAY_ORDER, CharacteristicFormats.tlv)
+    def __init__(self, iid):
+        AbstractCharacteristic.__init__(self, iid, CharacteristicsTypes.DISPLAY_ORDER, CharacteristicFormats.tlv8)
         # TODO notify is missing here
         self.perms = [CharacteristicPermissions.paired_read, CharacteristicPermissions.paired_write]
         # TODO get more information

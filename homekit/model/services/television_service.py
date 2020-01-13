@@ -28,7 +28,7 @@ class TelevisionService(AbstractService):
     Defined on page XXX (look https://github.com/KhaosT/HAP-NodeJS/blob/master/src/lib/gen/HomeKit-TV.ts instead)
     """
 
-    def __init__(self, name, manufacturer, model, serialnumber, firmwarerevision):
+    def __init__(self):
         AbstractService.__init__(self, ServicesTypes.get_uuid('public.hap.service.television'), get_id())
 
         self.append_characteristic(ActiveCharacteristic(get_id()))

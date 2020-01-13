@@ -79,7 +79,7 @@ class _Categories(object):
             _Categories.SPRINKLER: 'Sprinkler',
             _Categories.FAUCET: 'Faucet',
             _Categories.SHOWER_SYSTEM: 'Shower System',
-            _Categories.TV: 'TV',
+            _Categories.TV: 'Television',
             _Categories.REMOTE: 'Remote',
         }
 
