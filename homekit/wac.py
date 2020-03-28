@@ -19,12 +19,19 @@
 import argparse
 import sys
 import logging
-import re
+import re, io
 
 import dns
 import dns.resolver
 
+import tlv8
+
+from homekit.protocol.tlv_types import TlvTypes
+
 from homekit.log_support import setup_logging, add_log_arguments
+from homekit.http_impl import HomeKitHTTPConnection, HttpContentTypes
+
+from cryptography.hazmat.primitives.asymmetric import x25519
 
 def setup_args_parser():
     parser = argparse.ArgumentParser(description='wac network setup pairing app')
@@ -45,27 +52,30 @@ def key_from_keyboard():
         return input('Enter Wifi Password: ')
     return tmp
 
-def wac_discover(timeout=10):
+def wac_discover(timeout = 10):
     """ Discover wac device.  User must have already connected wifi to the setup network
     Returns name, address, port and seed (needed for encryption) """
-    
+
     resolver = dns.resolver.Resolver()
     resolver.nameservers = ['224.0.0.251'] #mdns multicast address
     resolver.port = 5353 #mdns port
-    resolver.time = timeout
-    resolver.lifetime = timeout
+    resolver.time = 10
+    resolver.lifetime = 10
     try:
         result = resolver.query('_mfi-config._tcp.local','PTR')
     except dns.exception.Timeout:
         logging.error("Couldn't find wac device looking for mfi_config via mdns")
         sys.exit(-1)
-
+    except ValueError:
+        logging.error("You might have an old version of dnspython that fails in python3")
+        sys.exit(-1)
+        
     port = None
     target = None
     address = None
     address_name = None
     txt_data = {}
-    
+
     for rdata in result.response.additional:
         if dns.rdatatype.to_text(rdata.rdtype) == "SRV":
             port = rdata.items[0].port
@@ -75,7 +85,8 @@ def wac_discover(timeout=10):
             address = rdata.items[0]
         if dns.rdatatype.to_text(rdata.rdtype) == "TXT":
             for item in rdata.items[0].strings:
-                key, value = item.split("=")
+                i = item.decode('utf-8')
+                key, value = i.split("=")
                 txt_data[key] = value
     assert len(txt_data) > 0, "TXT Data Not Found"
     assert 'seed' in txt_data, "Required Key 'Seed' not found"
@@ -86,10 +97,23 @@ def wac_discover(timeout=10):
     logging.debug("Found WAC device %s [%s:%s], seed %s" % (target, address, port, txt_data["seed"]))
     return (target, address, port, txt_data["seed"])
 
-def mfi_auth(address, port, seed):
-    pass
+def wac_auth(setup_private_key, address, port, seed):
+    public_bytes = setup_private_key.public_key().public_bytes()
+    body = b'\x01' + public_bytes
+    conn = HomeKitHTTPConnection(str(address), port=port)
+    conn.connect()
+    conn.putrequest('POST', '/auth-setup', skip_accept_encoding = True)
+    conn.putheader('Content-Type', 'application/octet-stream')
+    conn.putheader('Content-Length', len(body))
+    conn.endheaders(body)
+    response = conn.getresponse()
+    response_tlv = tlv8.decode(response.read(),
+                               {TlvTypes.PublicKey: tlv8.DataType.BYTES,
+                                TlvTypes.Signature: tlv8.DataType.BYTES,
+                                TlvTypes.Certificate: tlv8.DataType.BYTES} )
+    logging.error('response: {}'.format(tlv8.format_string(response_tlv)))
     
-    
+
 if __name__ == '__main__':
     args = setup_args_parser()
 
@@ -100,17 +124,10 @@ if __name__ == '__main__':
     else:
         key_function = key_from_keyboard()
 
-    try:
-        print (mfi_discover())
         
-        
-#        finish_pairing = controller.start_pairing(args.alias, args.device)
-#        finish_pairing(pin_function())
-#        pairing = controller.get_pairings()[args.alias]
-#        pairing.list_accessories_and_characteristics()
-#        controller.save_data(args.file)
-#        print('Pairing for "{a}" was established.'.format(a=args.alias))
-    except Exception as e:
-        print(e)
-        logging.debug(e, exc_info=True)
-        sys.exit(-1)
+    setup_private_key = x25519.X25519PrivateKey.generate()
+    name, address, port, seed = wac_discover()
+    logging.error("Found {} {}".format(address, port))
+    wac_auth(setup_private_key, address, port, seed)
+    logging.error("Done")
+
