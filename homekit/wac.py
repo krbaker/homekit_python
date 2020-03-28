@@ -26,7 +26,6 @@ import dns.resolver
 
 from homekit.log_support import setup_logging, add_log_arguments
 
-
 def setup_args_parser():
     parser = argparse.ArgumentParser(description='mfi network setup pairing app')
     parser.add_argument('-s', action='store', required=True, dest='ssid', help='SSID')
@@ -86,6 +85,10 @@ def mfi_discover(timeout=10):
     assert address_name == target, "A Record not SRV Target"
     logging.debug("Found MFI device %s [%s:%s], seed %s" % (target, address, port, txt_data["seed"]))
     return (target, address, port, txt_data["seed"])
+
+def mfi_auth(address, port, seed):
+    pass
+    
     
 if __name__ == '__main__':
     args = setup_args_parser()
@@ -99,6 +102,8 @@ if __name__ == '__main__':
 
     try:
         print (mfi_discover())
+        
+        
 #        finish_pairing = controller.start_pairing(args.alias, args.device)
 #        finish_pairing(pin_function())
 #        pairing = controller.get_pairings()[args.alias]
