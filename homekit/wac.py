@@ -27,7 +27,7 @@ import dns.resolver
 from homekit.log_support import setup_logging, add_log_arguments
 
 def setup_args_parser():
-    parser = argparse.ArgumentParser(description='mfi network setup pairing app')
+    parser = argparse.ArgumentParser(description='wac network setup pairing app')
     parser.add_argument('-s', action='store', required=True, dest='ssid', help='SSID')
     parser.add_argument('-k', action='store', required=False, dest='key', help='Network Key (will prompt without)')
     add_log_arguments(parser)
@@ -45,9 +45,9 @@ def key_from_keyboard():
         return input('Enter Wifi Password: ')
     return tmp
 
-def mfi_discover(timeout=10):
-    """ Discover mfi device.  User must have already connected wifi to the setup network
-    Returns name, address, port and seed (needed for encryption """
+def wac_discover(timeout=10):
+    """ Discover wac device.  User must have already connected wifi to the setup network
+    Returns name, address, port and seed (needed for encryption) """
     
     resolver = dns.resolver.Resolver()
     resolver.nameservers = ['224.0.0.251'] #mdns multicast address
@@ -57,7 +57,7 @@ def mfi_discover(timeout=10):
     try:
         result = resolver.query('_mfi-config._tcp.local','PTR')
     except dns.exception.Timeout:
-        logging.error("Couldn't find mfi device via mdns")
+        logging.error("Couldn't find wac device looking for mfi_config via mdns")
         sys.exit(-1)
 
     port = None
@@ -83,7 +83,7 @@ def mfi_discover(timeout=10):
     assert target, "No Target Found"
     assert address, "No Address Found"
     assert address_name == target, "A Record not SRV Target"
-    logging.debug("Found MFI device %s [%s:%s], seed %s" % (target, address, port, txt_data["seed"]))
+    logging.debug("Found WAC device %s [%s:%s], seed %s" % (target, address, port, txt_data["seed"]))
     return (target, address, port, txt_data["seed"])
 
 def mfi_auth(address, port, seed):
