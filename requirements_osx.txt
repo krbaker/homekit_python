@@ -1,7 +1,7 @@
 zeroconf
 hkdf
 ed25519
-cryptography>=2.5
+cryptography>=42.0.2
 coverage
 flake8
 pytest
